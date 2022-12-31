@@ -1,6 +1,7 @@
-# hello_world
+# Flutter Practice 2023
 
-HelloWorld
+Flutter Practice 2023
+By MinSeok Chang
 
 ## Getting Started
 
