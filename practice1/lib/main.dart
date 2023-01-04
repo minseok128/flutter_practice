@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hello_world/widgets/Button.dart';
-import 'package:hello_world/widgets/currency_card.dart';
+import './widgets/Button.dart';
+import './widgets/currency_card.dart';
 
 void main() {
   runApp(App());
@@ -81,9 +81,10 @@ class App extends StatelessWidget {
                           bgColor: Color(0xFFF2B33A),
                           textColor: Colors.black),
                       Button(
-                          text: 'Request',
-                          bgColor: Color(0xFF1F2123),
-                          textColor: Colors.white),
+                        text: 'Request',
+                        bgColor: Color(0xFF1F2123),
+                        textColor: Colors.white,
+                      ),
                     ],
                   ),
                   const SizedBox(
