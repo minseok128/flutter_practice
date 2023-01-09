@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -8,6 +10,33 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int totalSeconds = 1500;
+  late Timer timer;
+  bool isRunning = false;
+
+  void onTick(Timer timer) {
+    setState(() {
+      totalSeconds--;
+    });
+  }
+
+  void onStartPress() {
+    setState(() {
+      isRunning = true;
+    });
+    timer = Timer.periodic(
+      const Duration(seconds: 1),
+      onTick,
+    );
+  }
+
+  void onStopPress() {
+    setState(() {
+      isRunning = false;
+    });
+    timer.cancel();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Container(
               alignment: Alignment.bottomCenter,
               child: Text(
-                '25:00',
+                '$totalSeconds',
                 style: TextStyle(
                   color: Theme.of(context).cardColor,
                   fontSize: 89,
@@ -31,14 +60,23 @@ class _HomeScreenState extends State<HomeScreen> {
           Flexible(
             flex: 3,
             child: Center(
-              child: IconButton(
-                iconSize: 120,
-                color: Theme.of(context).cardColor,
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.play_circle_outlined,
-                ),
-              ),
+              child: isRunning
+                  ? IconButton(
+                      iconSize: 120,
+                      color: Theme.of(context).cardColor,
+                      onPressed: onStopPress,
+                      icon: const Icon(
+                        Icons.pause_circle_outline,
+                      ),
+                    )
+                  : IconButton(
+                      iconSize: 120,
+                      color: Theme.of(context).cardColor,
+                      onPressed: onStartPress,
+                      icon: const Icon(
+                        Icons.play_circle_outlined,
+                      ),
+                    ),
             ),
           ),
           Flexible(
@@ -49,6 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Container(
                     decoration: BoxDecoration(
                       color: Theme.of(context).cardColor,
+                      borderRadius: BorderRadius.circular(50),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
