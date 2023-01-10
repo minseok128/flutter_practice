@@ -47,10 +47,22 @@ class _HomeScreenState extends State<HomeScreen> {
     timer.cancel();
   }
 
+  void onResetPressed() {
+    setState(() {
+      isRunning = false;
+      totalSeconds = maxTime;
+    });
+    timer.cancel();
+  }
+
   String format(int seconds) {
     var duration = Duration(seconds: seconds);
     //print(duration.toString().split('.')[0].substring(2));
     return duration.toString().split('.')[0].substring(2);
+  }
+
+  double getValue(int seconds) {
+    return (maxTime - seconds) / maxTime;
   }
 
   @override
@@ -60,38 +72,75 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: [
           Flexible(
-            flex: 1,
-            child: Container(
-              alignment: Alignment.bottomCenter,
-              child: Text(
-                format(totalSeconds),
-                style: TextStyle(
-                  color: Theme.of(context).cardColor,
-                  fontSize: 89,
-                  fontWeight: FontWeight.w600,
+            flex: 2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  alignment: Alignment.bottomCenter,
+                  child: Text(
+                    format(totalSeconds),
+                    style: TextStyle(
+                      color: Theme.of(context).cardColor,
+                      fontSize: 89,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
-              ),
+                const SizedBox(
+                  height: 5,
+                ),
+                LinearProgressIndicator(
+                  value: getValue(totalSeconds),
+                  color: Theme.of(context).cardColor,
+                  minHeight: 10,
+                ),
+              ],
             ),
           ),
           Flexible(
-            flex: 3,
-            child: Center(
-              child: IconButton(
-                iconSize: 120,
-                color: Theme.of(context).cardColor,
-                onPressed: isRunning ? onPausePressed : onStartPressed,
-                icon: isRunning
-                    ? const Icon(
-                        Icons.pause_circle_outline,
-                      )
-                    : const Icon(
-                        Icons.play_circle_outlined,
+            flex: 5,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  iconSize: 120,
+                  color: Theme.of(context).cardColor,
+                  onPressed: isRunning ? onPausePressed : onStartPressed,
+                  icon: isRunning
+                      ? const Icon(
+                          Icons.pause_circle_outline,
+                        )
+                      : const Icon(
+                          Icons.play_circle_outlined,
+                        ),
+                ),
+                Container(
+                  height: 40,
+                  width: 90,
+                  decoration: BoxDecoration(
+                    color: isRunning
+                        ? Theme.of(context).cardColor.withAlpha(100)
+                        : Theme.of(context).cardColor.withAlpha(255),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: TextButton(
+                    onPressed: isRunning ? () {} : onResetPressed,
+                    child: Text(
+                      'Reset',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).backgroundColor,
                       ),
-              ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           Flexible(
-            flex: 1,
+            flex: 2,
             child: Row(
               children: [
                 Expanded(
