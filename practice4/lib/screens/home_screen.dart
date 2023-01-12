@@ -60,7 +60,7 @@ class HomeScreen extends StatelessWidget {
         return Webtoon(
           title: webtoon.title,
           thumb: webtoon.thumb,
-          id: index.toString(),
+          id: webtoon.id,
         );
       },
       separatorBuilder: (context, index) {
