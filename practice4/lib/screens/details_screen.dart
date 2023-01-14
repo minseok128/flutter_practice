@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:practice4/models/webtoon_detail_model.dart';
 import 'package:practice4/models/webtton_episode_model.dart';
 import 'package:practice4/services/api_service.dart';
 import 'package:practice4/widgets/episode_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailScreen extends StatefulWidget {
   final String thumb, title, id;
@@ -21,12 +24,39 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   late Future<WebtoonDetailModel> webtoonDetail;
   late Future<List<WebtoonEpisodeModel>> webtoonEpisodes;
+  late SharedPreferences prefs;
+  bool isLiked = false;
+
+  Future initPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+    final List<String>? likedToons = prefs.getStringList('likedToons');
+    if (likedToons != null) {
+      if (likedToons.contains(widget.id)) {
+        setState(() {
+          isLiked = true;
+        });
+      }
+    } else {
+      prefs.setStringList('likedToons', []);
+    }
+  }
+
+  void onPressedLike() async {
+    final List<String>? likedToons = prefs.getStringList('likedToons');
+    isLiked ? likedToons!.remove(widget.id) : likedToons!.add(widget.id);
+    await prefs.setStringList('likedToons', likedToons);
+    print(likedToons);
+    setState(() {
+      isLiked = !isLiked;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     webtoonDetail = ApiService.getToonDetailById(id: widget.id);
     webtoonEpisodes = ApiService.getLatestEpisodesById(id: widget.id);
+    initPrefs();
   }
 
   @override
@@ -45,8 +75,11 @@ class _DetailScreenState extends State<DetailScreen> {
         ),
         actions: [
           IconButton(
-              onPressed: () => {},
-              icon: const Icon(Icons.favorite_outline_outlined))
+            onPressed: onPressedLike,
+            icon: isLiked
+                ? const Icon(Icons.favorite_outlined)
+                : const Icon(Icons.favorite_outline_outlined),
+          )
         ],
       ),
       body: SingleChildScrollView(
