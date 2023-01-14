@@ -39,75 +39,127 @@ class _DetailScreenState extends State<DetailScreen> {
           widget.title,
           style: const TextStyle(
             fontSize: 26,
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
-      body: Center(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 50,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(50),
+            child: Column(
               children: [
-                Hero(
-                  tag: widget.id,
-                  child: Container(
-                      width: 300,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 10,
-                            offset: const Offset(10, 10),
-                            color: Colors.black.withOpacity(0.5),
-                          )
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Hero(
+                      tag: widget.id,
+                      child: Container(
+                          width: 300,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 10,
+                                offset: const Offset(10, 10),
+                                color: Colors.black.withOpacity(0.5),
+                              )
+                            ],
+                          ),
+                          clipBehavior: Clip.hardEdge,
+                          child: Image.network(widget.thumb)),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                FutureBuilder(
+                  future: webtoonDetail,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Column(
+                        children: [
+                          Text(
+                            '${snapshot.data!.genre}  |  ${snapshot.data!.age}',
+                            style: const TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          Text(
+                            snapshot.data!.about,
+                            style: const TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
                         ],
-                      ),
-                      clipBehavior: Clip.hardEdge,
-                      child: Image.network(widget.thumb)),
+                      );
+                    } else {
+                      return const Text('...');
+                    }
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                FutureBuilder(
+                  future: webtoonEpisodes,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Column(
+                        children: [
+                          for (var e in snapshot.data!)
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: Colors.green.shade400,
+                                boxShadow: [
+                                  BoxShadow(
+                                    blurRadius: 2,
+                                    offset: const Offset(2, 2),
+                                    color: Colors.black.withOpacity(0.25),
+                                  ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 25,
+                                  vertical: 12,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      e.title,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    const Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
+                    } else {
+                      return Container();
+                    }
+                  },
                 ),
               ],
             ),
-            const SizedBox(
-              height: 25,
-            ),
-            FutureBuilder(
-              future: webtoonDetail,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 50,
-                    ),
-                    child: Column(
-                      children: [
-                        Text(
-                          '${snapshot.data!.genre}  |  ${snapshot.data!.age}',
-                          style: const TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        Text(
-                          snapshot.data!.about,
-                          style: const TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                } else {
-                  return const Text('...');
-                }
-              },
-            ),
-          ],
+          ),
         ),
       ),
     );
