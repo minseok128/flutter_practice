@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:practice4/models/webtoon_detail_model.dart';
 import 'package:practice4/models/webtton_episode_model.dart';
 import 'package:practice4/services/api_service.dart';
+import 'package:practice4/widgets/episode_widget.dart';
 
 class DetailScreen extends StatefulWidget {
   final String thumb, title, id;
@@ -112,43 +113,9 @@ class _DetailScreenState extends State<DetailScreen> {
                       return Column(
                         children: [
                           for (var e in snapshot.data!)
-                            Container(
-                              margin: const EdgeInsets.only(bottom: 10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25),
-                                color: Colors.green.shade400,
-                                boxShadow: [
-                                  BoxShadow(
-                                    blurRadius: 2,
-                                    offset: const Offset(2, 2),
-                                    color: Colors.black.withOpacity(0.25),
-                                  ),
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 25,
-                                  vertical: 12,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      e.title,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    const Icon(
-                                      Icons.arrow_forward_ios,
-                                      color: Colors.white,
-                                    ),
-                                  ],
-                                ),
-                              ),
+                            Episode(
+                              e: e,
+                              toonId: widget.id,
                             ),
                         ],
                       );
