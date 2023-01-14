@@ -43,6 +43,11 @@ class _DetailScreenState extends State<DetailScreen> {
             fontWeight: FontWeight.w500,
           ),
         ),
+        actions: [
+          IconButton(
+              onPressed: () => {},
+              icon: const Icon(Icons.favorite_outline_outlined))
+        ],
       ),
       body: SingleChildScrollView(
         child: Center(
